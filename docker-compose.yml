@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: spendly
+      POSTGRES_PASSWORD: spendly
+      POSTGRES_DB: spendly
+    ports:
+      - "5432:5432"
+    volumes:
+      - spendly_pg:/var/lib/postgresql/data
+
+volumes:
+  spendly_pg:
