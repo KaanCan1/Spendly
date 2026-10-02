@@ -1,7 +1,0 @@
-#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"
-#include "Generated.xcconfig"
-// Google Sign-In: iOS client ID + reversed scheme (override in Secrets.xcconfig if needed).
-GOOGLE_IOS_CLIENT_ID = 989289303049-gt671obarfseaiuuncvtm2ftb8sahirv.apps.googleusercontent.com
-GOOGLE_WEB_CLIENT_ID = 989289303049-cje9j6h9uo34ftvvknsrm5bjj6envo05.apps.googleusercontent.com
-GOOGLE_REVERSED_CLIENT_ID = com.googleusercontent.apps.989289303049-gt671obarfseaiuuncvtm2ftb8sahirv
-#include? "Secrets.xcconfig"

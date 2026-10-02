@@ -1,53 +1,26 @@
-# Miscellaneous
-*.class
-*.log
-*.pyc
-*.swp
+# macOS
 .DS_Store
-.atom/
-.build/
-.buildlog/
-.history
-.svn/
-.swiftpm/
-migrate_working_dir/
 
-# IntelliJ related
-*.iml
-*.ipr
-*.iws
-.idea/
-
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
-
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
-.dart_tool/
-.flutter-plugins
-.flutter-plugins-dependencies
-.pub-cache/
-.pub/
+# Xcode
+xcuserdata/
+*.xcuserstate
+DerivedData/
 /build/
 
-# Env / secrets
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Secrets
 .env
 *.env
-backend/.env
 
-# Symbolication related
-app.*.symbols
-
-# Obfuscation related
-app.*.map.json
-
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
-
-# Local iOS OAuth overrides (copy from ios/Flutter/Secrets.xcconfig.example)
-ios/Flutter/Secrets.xcconfig
+# Leftovers from the Flutter + Node version (kept on the `archive/flutter` branch).
+# These folders only hold untracked build output and local secrets now; safe to delete.
+/android/
+/ios/
+/backend/
+/.dart_tool/
+/.idea/
+*.iml
+.flutter-plugins-dependencies
