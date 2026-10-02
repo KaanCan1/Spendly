@@ -24,3 +24,6 @@ DerivedData/
 /.idea/
 *.iml
 .flutter-plugins-dependencies
+
+# code-review-graph (kod-grafi) local index
+.code-review-graph/
