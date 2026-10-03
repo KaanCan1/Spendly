@@ -1,0 +1,86 @@
+{
+  "identifier" : "4B6A1C2E",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "6743000001",
+      "localizations" : [
+        {
+          "description" : "Every Pro feature, forever.",
+          "displayName" : "Spendly Pro Lifetime",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "Tüm Pro özellikleri, ömür boyu.",
+          "displayName" : "Spendly Pro Ömür Boyu",
+          "locale" : "tr"
+        }
+      ],
+      "productID" : "com.kaancankurt.spendly.pro.lifetime",
+      "referenceName" : "Spendly Pro Lifetime",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6743000000",
+    "_developerTeamID" : "",
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21500001",
+      "localizations" : [
+
+      ],
+      "name" : "Spendly Pro",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "2.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6743000002",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Every Pro feature, billed monthly.",
+              "displayName" : "Spendly Pro Monthly",
+              "locale" : "en_US"
+            },
+            {
+              "description" : "Tüm Pro özellikleri, aylık ödeme.",
+              "displayName" : "Spendly Pro Aylık",
+              "locale" : "tr"
+            }
+          ],
+          "productID" : "com.kaancankurt.spendly.pro.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Spendly Pro Monthly",
+          "subscriptionGroupID" : "21500001",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

@@ -37,7 +37,7 @@ public struct DayStrip: View {
             VStack(spacing: 2) {
                 Text(day, format: .dateTime.day())
                     .font(SpendlyFont.number(18, .medium))
-                Text(calendar.isDateInToday(day) ? "today" : day.formatted(.dateTime.weekday(.abbreviated)).lowercased())
+                (calendar.isDateInToday(day) ? Text("today") : Text(verbatim: day.formatted(.dateTime.weekday(.abbreviated)).lowercased()))
                     .font(SpendlyFont.micro)
                     .opacity(isSelected ? 0.9 : 0.6)
             }

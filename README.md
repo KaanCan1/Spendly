@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/brand/spendly-logo-motion.gif" width="600" alt="Spendly logo animation">
+</p>
+
 # Spendly
 
 A minimal expense tracker for iPhone. Type the amount, tap a category, and it is saved.
@@ -11,7 +15,7 @@ A minimal expense tracker for iPhone. Type the amount, tap a category, and it is
   <img src="docs/screenshots/01-quick-add.png" width="200" alt="Quick add">
   <img src="docs/screenshots/03-just-saved.png" width="200" alt="Saved with undo">
   <img src="docs/screenshots/06-overview.png" width="200" alt="Monthly overview">
-  <img src="docs/screenshots/10-widget.jpg" width="200" alt="Home screen widget">
+  <img src="docs/screenshots/12-widget.jpg" width="200" alt="Home screen widget">
 </p>
 
 ## About
@@ -24,11 +28,14 @@ Most budgeting apps try to do everything. Spendly focuses on one thing: logging 
 - Suggestion to repeat your usual expense
 - Income entries and past days
 - Monthly overview by category
-- Monthly budget per category with a warning at 80%
+- Your own categories with a name, emoji and color
+- Monthly budget per category, with a notification at 80% and 100%
 - Daily and weekly reminders
 - Home screen and lock screen widgets, Control Center button
 - Siri and Shortcuts support
-- CSV export
+- English and Turkish
+
+**Spendly Pro** (monthly or one-time purchase) removes the free limits of 3 custom categories and 1 budget, and adds CSV export.
 
 ## Screenshots
 
@@ -40,9 +47,9 @@ Most budgeting apps try to do everything. Spendly focuses on one thing: logging 
 |:---:|:---:|:---:|:---:|
 | <img src="docs/screenshots/05-day-picker.png" width="180"> | <img src="docs/screenshots/06-overview.png" width="180"> | <img src="docs/screenshots/07-budget.png" width="180"> | <img src="docs/screenshots/08-edit.png" width="180"> |
 
-| Settings | Widget |
-|:---:|:---:|
-| <img src="docs/screenshots/09-settings.png" width="180"> | <img src="docs/screenshots/10-widget.jpg" width="180"> |
+| Settings | Categories | Edit category | Widget |
+|:---:|:---:|:---:|:---:|
+| <img src="docs/screenshots/09-settings.png" width="180"> | <img src="docs/screenshots/10-categories.png" width="180"> | <img src="docs/screenshots/11-category-editor.png" width="180"> | <img src="docs/screenshots/12-widget.jpg" width="180"> |
 
 ## Tech Stack
 
@@ -54,7 +61,9 @@ Most budgeting apps try to do everything. Spendly focuses on one thing: logging 
 | Sync | CloudKit (ready, turned on with the iCloud capability) |
 | Widgets | WidgetKit (home screen, lock screen, Control Center) |
 | Siri and Shortcuts | App Intents |
-| Reminders | UserNotifications (local) |
+| Notifications | UserNotifications (local reminders and budget alerts) |
+| Purchases | StoreKit 2 |
+| Localization | String Catalogs (English, Turkish) |
 | Modules | Swift Package Manager |
 | Tests | Swift Testing |
 
@@ -76,6 +85,7 @@ flowchart TB
         reminders["Local notifications"]
     end
     icloud[("iCloud<br/>CloudKit")]
+    appstore[("App Store<br/>StoreKit 2")]
 
     app --> kit
     widgets --> intents
@@ -84,6 +94,7 @@ flowchart TB
     kit --> store
     app --> reminders
     store -.->|"optional sync"| icloud
+    app -.->|"Spendly Pro"| appstore
 
     classDef surface fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
     classDef shared fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#3b0764
@@ -93,7 +104,7 @@ flowchart TB
     class app,widgets,intents surface
     class kit,reminders shared
     class store data
-    class icloud external
+    class icloud,appstore external
 ```
 
 ```
@@ -116,6 +127,8 @@ Run the `Spendly` scheme. To load sample data in a debug build, launch with the 
 ```bash
 xcrun simctl launch booted com.kaancankurt.spendly -demo
 ```
+
+In-app purchases can be tried locally with the `Spendly.storekit` configuration, which the `Spendly` scheme uses when the app is run from Xcode.
 
 Run the tests:
 

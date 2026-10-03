@@ -22,7 +22,7 @@ struct CategoryEntity: AppEntity {
 
     init(_ record: CategoryRecord) {
         id = record.id
-        name = record.name
+        name = record.displayName
         emoji = record.emoji
     }
 }
@@ -80,13 +80,15 @@ struct LogExpenseIntent: AppIntent {
         }
 
         let store = SpendlyEnvironment.store
-        try store.add(ExpenseDraft(amount: money, kind: .expense, categoryID: category.id, note: note))
+        let draft = ExpenseDraft(amount: money, kind: .expense, categoryID: category.id, note: note)
+        try store.add(draft)
+        BudgetAlerts.notifyIfCrossed(by: draft, store: store)
         SpendlyEnvironment.reloadWidgets()
 
         let today = store.total(in: Calendar.current.dayInterval(containing: .now), kind: .expense, currencyCode: currencyCode)
-        return .result(dialog: IntentDialog(stringLiteral:
-            "Logged \(category.emoji) \(money.formatted(compact: true)). Today: \(today.formatted(compact: true))."
-        ))
+        let logged = money.formatted(compact: true)
+        let total = today.formatted(compact: true)
+        return .result(dialog: "Logged \(category.emoji) \(logged). Today: \(total).")
     }
 }
 
@@ -117,11 +119,13 @@ struct QuickLogIntent: AppIntent {
     @MainActor
     func perform() async throws -> some IntentResult {
         guard let id = UUID(uuidString: categoryID) else { return .result() }
-        try SpendlyEnvironment.store.add(ExpenseDraft(
+        let draft = ExpenseDraft(
             amount: Money(minorUnits: Int64(amountMinor), currencyCode: currencyCode),
             kind: .expense,
             categoryID: id
-        ))
+        )
+        try SpendlyEnvironment.store.add(draft)
+        BudgetAlerts.notifyIfCrossed(by: draft, store: SpendlyEnvironment.store)
         // Interactive widgets reload on their own after an intent; this covers the other widgets.
         SpendlyEnvironment.reloadWidgets()
         return .result()

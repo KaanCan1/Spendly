@@ -129,4 +129,55 @@ struct SwiftDataExpenseStoreTests {
         let names = store.categoriesByUsage(kind: .expense).map(\.name)
         #expect(names == ["health", "fun", "food", "coffee", "transport", "shopping", "bills", "other"])
     }
+
+    @Test func customCategoriesCanBeAddedEditedReorderedAndArchived() throws {
+        let id = try store.addCategory(name: "  gym ", emoji: "🏋️", colorHex: "#5FD3A2", kind: .expense)
+        var categories = store.categories(kind: .expense)
+        #expect(categories.last?.name == "gym")
+        #expect(categories.last?.isDefault == false)
+        #expect(categories.first?.isDefault == true)
+
+        try store.updateCategory(id: id, name: "fitness", emoji: "💪", colorHex: "#6BB8FF")
+        let edited = try category("fitness")
+        #expect(edited.emoji == "💪")
+        #expect(edited.colorHex == "#6BB8FF")
+
+        try store.reorderCategories([id] + categories.dropLast().map(\.id))
+        categories = store.categories(kind: .expense)
+        #expect(categories.first?.id == id)
+
+        try store.archiveCategory(id: id)
+        #expect(!store.categories(kind: .expense).contains { $0.id == id })
+    }
+
+    @Test func archivedCategoryStillLabelsPastExpenses() throws {
+        let id = try store.addCategory(name: "gym", emoji: "🏋️", colorHex: "#5FD3A2", kind: .expense)
+        try store.add(ExpenseDraft(amount: lira(30_000), kind: .expense, categoryID: id))
+        try store.archiveCategory(id: id)
+        #expect(store.expenses(in: calendar.dayInterval(containing: .now), kind: .expense).first?.category?.name == "gym")
+    }
+
+    @Test func blankCategoryNamesAreRejected() {
+        #expect(throws: ExpenseStoreError.emptyCategoryName) {
+            try store.addCategory(name: "   ", emoji: "x", colorHex: "#000000", kind: .expense)
+        }
+    }
+
+    @Test func recoloredDefaultsKeepTheirColorAfterReseeding() throws {
+        let food = try category("food")
+        try store.updateCategory(id: food.id, name: "food", emoji: "🍔", colorHex: "#123456")
+        try store.seedDefaultCategoriesIfNeeded()
+        #expect(try category("food").colorHex == "#123456")
+    }
+
+    @Test func spentSumsOneCategoryInOneCurrency() throws {
+        let food = try category("food")
+        let coffee = try category("coffee")
+        try store.add(ExpenseDraft(amount: lira(10_000), kind: .expense, categoryID: food.id))
+        try store.add(ExpenseDraft(amount: lira(5_000), kind: .expense, categoryID: food.id))
+        try store.add(ExpenseDraft(amount: lira(9_900), kind: .expense, categoryID: coffee.id))
+        try store.add(ExpenseDraft(amount: Money(minorUnits: 700, currencyCode: "USD"), kind: .expense, categoryID: food.id))
+        let month = calendar.monthInterval(containing: .now)
+        #expect(store.spent(categoryID: food.id, in: month, currencyCode: "TRY") == lira(15_000))
+    }
 }

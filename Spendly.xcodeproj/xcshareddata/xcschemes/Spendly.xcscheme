@@ -15,6 +15,9 @@
          <BuildableReference BuildableIdentifier = "primary" BlueprintIdentifier = "5B0000000000000000000701" BuildableName = "Spendly.app" BlueprintName = "Spendly" ReferencedContainer = "container:Spendly.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <StoreKitConfigurationFileReference
+         identifier = "../../Spendly.storekit">
+      </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction buildConfiguration = "Release" shouldUseLaunchSchemeArgsEnv = "YES" savedToolIdentifier = "" useCustomWorkingDirectory = "NO" debugDocumentVersioning = "YES">
       <BuildableProductRunnable runnableDebuggingMode = "0">

@@ -73,7 +73,7 @@ struct EntryEditorView: View {
                             ForEach(store.categories(kind: entry.kind)) { category in
                                 CategoryChip(
                                     emoji: category.emoji,
-                                    name: category.name,
+                                    name: category.displayName,
                                     colorHex: category.colorHex,
                                     isEnabled: input.minorUnits > 0,
                                     isCurrent: category.id == entry.category?.id
@@ -147,7 +147,7 @@ struct LimitSheet: View {
                     .font(.system(size: 28))
                     .frame(width: 56, height: 56)
                     .background(Circle().fill(SpendlyColor.tint(category.colorHex)))
-                Text("\(category.name) · monthly limit")
+                Text("\(category.displayName) · monthly limit")
                     .font(SpendlyFont.pill)
                     .foregroundStyle(SpendlyColor.ink)
             }
@@ -194,6 +194,10 @@ struct LimitSheet: View {
 
     private func save(_ limit: Int64?) {
         try? store.setMonthlyLimit(categoryID: category.id, limitMinor: limit)
+        // A budget is the moment alerts become useful, so this is when we ask (only once).
+        if limit != nil && BudgetAlerts.isEnabled {
+            Task { _ = await NotificationPermission.request() }
+        }
         dismiss()
     }
 }

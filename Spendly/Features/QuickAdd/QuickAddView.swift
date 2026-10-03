@@ -212,7 +212,9 @@ struct QuickAddView: View {
                     .foregroundStyle(calendar.isDateInToday(selectedDay) ? SpendlyColor.muted : SpendlyColor.signature)
                 }
                 Text("·").foregroundStyle(SpendlyColor.muted.opacity(0.5))
-                Button(note.isEmpty ? "note" : note) { isEditingNote = true }
+                Button { isEditingNote = true } label: {
+                    note.isEmpty ? Text("note") : Text(verbatim: note)
+                }
                     .foregroundStyle(note.isEmpty ? SpendlyColor.muted : SpendlyColor.ink)
                     .lineLimit(1)
             }
@@ -226,7 +228,7 @@ struct QuickAddView: View {
     private var suggestion: some View {
         if input.isBlank && toast == nil {
             if let entry = store.frequentEntries(kind: kind, currencyCode: currencyCode, limit: 1).first {
-                Button("\(entry.category.emoji) \(entry.category.name) \(entry.amount.formatted(locale: locale, compact: true)) again?") {
+                Button("\(entry.category.emoji) \(entry.category.displayName) \(entry.amount.formatted(locale: locale, compact: true)) again?") {
                     save(amount: entry.amount, category: entry.category)
                 }
                 .buttonStyle(PillButtonStyle(.quiet))
@@ -251,7 +253,7 @@ struct QuickAddView: View {
                 ForEach(categories) { category in
                     CategoryChip(
                         emoji: category.emoji,
-                        name: category.name,
+                        name: category.displayName,
                         colorHex: category.colorHex,
                         isEnabled: input.minorUnits > 0
                     ) {
@@ -297,8 +299,8 @@ struct QuickAddView: View {
     // MARK: Actions
 
     private func dayLabel(_ day: Date) -> String {
-        if calendar.isDateInToday(day) { return "today" }
-        if calendar.isDateInYesterday(day) { return "yesterday" }
+        if calendar.isDateInToday(day) { return String(localized: "today") }
+        if calendar.isDateInYesterday(day) { return String(localized: "yesterday") }
         return day.formatted(.dateTime.weekday(.abbreviated).day()).lowercased()
     }
 
@@ -320,13 +322,9 @@ struct QuickAddView: View {
     private func save(amount: Money, category: CategoryRecord) {
         let occurredAt = calendar.isDateInToday(selectedDay) ? Date.now : calendar.date(on: selectedDay, keepingTimeOf: .now)
         do {
-            let id = try store.add(ExpenseDraft(
-                amount: amount,
-                kind: kind,
-                categoryID: category.id,
-                note: note,
-                occurredAt: occurredAt
-            ))
+            let draft = ExpenseDraft(amount: amount, kind: kind, categoryID: category.id, note: note, occurredAt: occurredAt)
+            let id = try store.add(draft)
+            BudgetAlerts.notifyIfCrossed(by: draft, store: store)
             let formatted = amount.formatted(locale: locale, compact: true)
             if !amountFrame.isEmpty && !pillFrame.isEmpty {
                 flight = Flight(
@@ -336,7 +334,7 @@ struct QuickAddView: View {
                 )
             }
             withAnimation(.spendly) {
-                toast = SavedToast(expenseID: id, message: "nice, logged \(category.emoji) \(formatted)")
+                toast = SavedToast(expenseID: id, message: String(localized: "nice, logged \(category.emoji) \(formatted)"))
                 input.clear()
                 note = ""
                 isEditingNote = false

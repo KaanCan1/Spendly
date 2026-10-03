@@ -13,14 +13,20 @@ public struct CategoryRecord: Identifiable, Hashable, Sendable {
     public let colorHex: String
     public let kind: EntryKind
     public let monthlyLimitMinor: Int64?
+    /// One of the built-in categories. Their names are shown translated; the user's are shown as typed.
+    public let isDefault: Bool
 
-    public init(id: UUID, name: String, emoji: String, colorHex: String, kind: EntryKind, monthlyLimitMinor: Int64? = nil) {
+    public init(
+        id: UUID, name: String, emoji: String, colorHex: String, kind: EntryKind,
+        monthlyLimitMinor: Int64? = nil, isDefault: Bool = false
+    ) {
         self.id = id
         self.name = name
         self.emoji = emoji
         self.colorHex = colorHex
         self.kind = kind
         self.monthlyLimitMinor = monthlyLimitMinor
+        self.isDefault = isDefault
     }
 }
 
@@ -85,6 +91,8 @@ public protocol ExpenseStore: AnyObject, Observable {
     func total(in interval: DateInterval, kind: EntryKind, currencyCode: String) -> Money
     /// Most frequently logged (category, amount) pairs recently, most frequent first.
     func frequentEntries(kind: EntryKind, currencyCode: String, limit: Int) -> [QuickEntry]
+    /// Spending of one category within `interval`, in `currencyCode`.
+    func spent(categoryID: UUID, in interval: DateInterval, currencyCode: String) -> Money
 
     @discardableResult
     func add(_ draft: ExpenseDraft) throws -> UUID
@@ -94,4 +102,13 @@ public protocol ExpenseStore: AnyObject, Observable {
     /// `nil` removes the limit.
     func setMonthlyLimit(categoryID: UUID, limitMinor: Int64?) throws
     func seedDefaultCategoriesIfNeeded() throws
+
+    // Category management
+    @discardableResult
+    func addCategory(name: String, emoji: String, colorHex: String, kind: EntryKind) throws -> UUID
+    func updateCategory(id: UUID, name: String, emoji: String, colorHex: String) throws
+    /// Hides the category from pickers; past expenses keep showing it.
+    func archiveCategory(id: UUID) throws
+    /// Persists a new order for the categories of one kind.
+    func reorderCategories(_ orderedIDs: [UUID]) throws
 }

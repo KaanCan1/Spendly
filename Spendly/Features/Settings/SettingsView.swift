@@ -5,79 +5,99 @@ import SpendlyUI
 import SwiftUI
 import UniformTypeIdentifiers
 
-/// One quiet sheet: currency, reminders, categories (with limits), export.
+/// One quiet sheet: Pro, currency, reminders and alerts, categories, export.
 struct SettingsView: View {
     let store: any ExpenseStore
     @Binding var currencyCode: String
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.locale) private var locale
+    @Environment(ProStore.self) private var pro
     @AppStorage(ReminderKeys.dailyEnabled) private var dailyEnabled = false
     @AppStorage(ReminderKeys.dailyMinutes) private var dailyMinutes = ReminderKeys.defaultDailyMinutes
     @AppStorage(ReminderKeys.weeklyEnabled) private var weeklyEnabled = false
+    @AppStorage(BudgetAlerts.enabledKey, store: SharedSettings.defaults) private var budgetAlerts = true
     @State private var notificationsDenied = false
-    @State private var limitTarget: CategoryRecord?
+    @State private var paywall: ProFeature?
 
     var body: some View {
         NavigationStack {
             List {
                 Section {
-                    Picker("currency", selection: $currencyCode) {
-                        ForEach(Currency.pickerOptions(locale: locale), id: \.self) { code in
-                            Text("\(Currency.symbol(for: code, locale: locale))  \(code)").tag(code)
+                    if pro.isPro {
+                        Label("spendly pro is active", systemImage: "checkmark.seal")
+                            .foregroundStyle(SpendlyColor.signature)
+                    } else {
+                        Button { paywall = .general } label: {
+                            Label("upgrade to spendly pro", systemImage: "sparkles")
+                                .foregroundStyle(SpendlyColor.signature)
                         }
                     }
                 }
 
                 Section {
-                    Toggle("daily recap", isOn: reminderBinding($dailyEnabled))
+                    Picker("currency", selection: $currencyCode) {
+                        ForEach(Currency.pickerOptions(locale: locale), id: \.self) { code in
+                            Text(verbatim: "\(Currency.symbol(for: code, locale: locale))  \(code)").tag(code)
+                        }
+                    }
+                }
+
+                Section {
+                    Toggle("daily recap", isOn: notificationBinding($dailyEnabled))
                     if dailyEnabled {
                         DatePicker("at", selection: dailyTime, displayedComponents: .hourAndMinute)
                     }
-                    Toggle("weekly summary", isOn: reminderBinding($weeklyEnabled))
+                    Toggle("weekly summary", isOn: notificationBinding($weeklyEnabled))
+                    Toggle("budget alerts", isOn: notificationBinding($budgetAlerts))
                 } header: {
-                    Text("reminders")
+                    Text("notifications")
                 } footer: {
                     if notificationsDenied {
-                        Text("notifications are off for spendly — turn them on in iOS settings.")
+                        Text("notifications are off for spendly. turn them on in ios settings.")
                     } else {
-                        Text("the weekly summary arrives on sunday at 18:00.")
-                    }
-                }
-
-                Section("categories · monthly limits") {
-                    ForEach(store.categories(kind: .expense)) { category in
-                        Button { limitTarget = category } label: {
-                            HStack(spacing: 12) {
-                                Text(category.emoji)
-                                    .frame(width: 32, height: 32)
-                                    .background(Circle().fill(SpendlyColor.tint(category.colorHex)))
-                                Text(category.name)
-                                    .foregroundStyle(SpendlyColor.ink)
-                                Spacer()
-                                Text(category.monthlyLimitMinor.map {
-                                    Money(minorUnits: $0, currencyCode: currencyCode).formatted(locale: locale, compact: true)
-                                } ?? "no limit")
-                                .foregroundStyle(SpendlyColor.muted)
-                            }
-                        }
+                        Text("the weekly summary arrives on sunday at 18:00. budget alerts come at 80% and 100% of a limit.")
                     }
                 }
 
                 Section {
-                    ShareLink(
-                        item: CSVExport(store: store, locale: locale),
-                        preview: SharePreview("spendly.csv")
-                    ) {
-                        Label("export as csv", systemImage: "square.and.arrow.up")
+                    NavigationLink {
+                        CategoriesView(store: store, currencyCode: currencyCode)
+                    } label: {
+                        Label("categories and limits", systemImage: "square.grid.2x2")
+                    }
+                }
+
+                Section {
+                    if pro.isPro {
+                        ShareLink(
+                            item: CSVExport(store: store, locale: locale),
+                            preview: SharePreview("spendly.csv")
+                        ) {
+                            Label("export as csv", systemImage: "square.and.arrow.up")
+                        }
+                    } else {
+                        Button { paywall = .export } label: {
+                            HStack {
+                                Label("export as csv", systemImage: "square.and.arrow.up")
+                                Spacer()
+                                Text("pro")
+                                    .font(SpendlyFont.micro)
+                                    .foregroundStyle(SpendlyColor.onSignature)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 3)
+                                    .background(Capsule().fill(SpendlyColor.signature))
+                            }
+                        }
                     }
                 }
             }
             .font(SpendlyFont.body)
             .tint(SpendlyColor.signature)
+            .foregroundStyle(SpendlyColor.ink)
             .scrollContentBackground(.hidden)
             .background(SpendlyColor.canvas.ignoresSafeArea())
-            .navigationTitle("settings")
+            .navigationTitle(Text("settings"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
@@ -85,16 +105,17 @@ struct SettingsView: View {
                 }
             }
         }
-        .sheet(item: $limitTarget) { category in
-            LimitSheet(store: store, category: category, currencyCode: currencyCode)
+        .sheet(item: $paywall) { feature in
+            PaywallView(feature: feature)
         }
         .onChange(of: dailyMinutes) { reschedule() }
+        .task { notificationsDenied = await NotificationPermission.isDenied() }
         .presentationCornerRadius(SpendlyRadius.surface)
     }
 
-    /// Turning a reminder on asks for notification permission first (never at launch);
+    /// Turning a notification on asks for permission first (never at launch);
     /// if the user says no, the toggle stays off and the footer explains why.
-    private func reminderBinding(_ setting: Binding<Bool>) -> Binding<Bool> {
+    private func notificationBinding(_ setting: Binding<Bool>) -> Binding<Bool> {
         Binding {
             setting.wrappedValue
         } set: { isOn in
@@ -104,7 +125,7 @@ struct SettingsView: View {
                 return
             }
             Task {
-                let granted = await ReminderScheduler.requestAuthorization()
+                let granted = await NotificationPermission.request()
                 notificationsDenied = !granted
                 setting.wrappedValue = granted
                 reschedule()
@@ -139,7 +160,7 @@ struct CSVExport: Transferable {
             let fields = [
                 formatter.string(from: entry.occurredAt),
                 entry.kind.rawValue,
-                entry.category?.name ?? "",
+                entry.category?.displayName ?? "",
                 "\(entry.amount.decimalValue)",
                 entry.amount.currencyCode,
                 entry.note ?? "",

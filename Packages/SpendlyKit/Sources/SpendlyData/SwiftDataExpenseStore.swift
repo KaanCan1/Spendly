@@ -7,6 +7,7 @@ public enum ExpenseStoreError: Error, Equatable {
     case categoryNotFound(UUID)
     case nonPositiveAmount
     case expenseNotFound(UUID)
+    case emptyCategoryName
 }
 
 @MainActor
@@ -109,6 +110,14 @@ public final class SwiftDataExpenseStore: ExpenseStore {
             .map(\.entry)
     }
 
+    public func spent(categoryID: UUID, in interval: DateInterval, currencyCode: String) -> Money {
+        _ = revision
+        let sum = fetchExpenses(in: interval, kind: .expense)
+            .filter { $0.category?.id == categoryID && $0.currencyCode == currencyCode }
+            .reduce(Int64(0)) { $0 + $1.amountMinor }
+        return Money(minorUnits: sum, currencyCode: currencyCode)
+    }
+
     // MARK: Writes
 
     @discardableResult
@@ -177,9 +186,8 @@ public final class SwiftDataExpenseStore: ExpenseStore {
         var changed = false
         for (index, seed) in DefaultCategories.all.enumerated() {
             if let category = existingByID[seed.id] {
-                // Default categories' colors belong to the app until users can recolor them,
-                // so palette updates reach existing installs.
-                if category.colorHex != seed.colorHex {
+                // Users can recolor categories, so only fill in a color that was never set.
+                if category.colorHex.isEmpty {
                     category.colorHex = seed.colorHex
                     changed = true
                 }
@@ -191,6 +199,53 @@ public final class SwiftDataExpenseStore: ExpenseStore {
             changed = true
         }
         guard changed else { return }
+        try context.save()
+        revision += 1
+    }
+
+    // MARK: Category management
+
+    @discardableResult
+    public func addCategory(name: String, emoji: String, colorHex: String, kind: EntryKind) throws -> UUID {
+        let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty else { throw ExpenseStoreError.emptyCategoryName }
+        let kindRaw = kind.rawValue
+        let siblings = try context.fetch(FetchDescriptor<ExpenseCategory>(predicate: #Predicate { $0.kindRaw == kindRaw }))
+        let category = ExpenseCategory(
+            name: name,
+            emoji: emoji,
+            colorHex: colorHex,
+            kind: kind,
+            sortOrder: (siblings.map(\.sortOrder).max() ?? -1) + 1
+        )
+        context.insert(category)
+        try context.save()
+        revision += 1
+        return category.id
+    }
+
+    public func updateCategory(id: UUID, name: String, emoji: String, colorHex: String) throws {
+        let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty else { throw ExpenseStoreError.emptyCategoryName }
+        guard let category = try fetchCategory(id: id) else { throw ExpenseStoreError.categoryNotFound(id) }
+        category.name = name
+        category.emoji = emoji
+        category.colorHex = colorHex
+        try context.save()
+        revision += 1
+    }
+
+    public func archiveCategory(id: UUID) throws {
+        guard let category = try fetchCategory(id: id) else { throw ExpenseStoreError.categoryNotFound(id) }
+        category.isArchived = true
+        try context.save()
+        revision += 1
+    }
+
+    public func reorderCategories(_ orderedIDs: [UUID]) throws {
+        for (index, id) in orderedIDs.enumerated() {
+            try fetchCategory(id: id)?.sortOrder = index
+        }
         try context.save()
         revision += 1
     }
@@ -231,7 +286,8 @@ public final class SwiftDataExpenseStore: ExpenseStore {
             emoji: category.emoji,
             colorHex: category.colorHex.isEmpty ? "#9AA0A6" : category.colorHex,
             kind: category.kind,
-            monthlyLimitMinor: category.monthlyLimitMinor
+            monthlyLimitMinor: category.monthlyLimitMinor,
+            isDefault: DefaultCategories.ids.contains(category.id)
         )
     }
 

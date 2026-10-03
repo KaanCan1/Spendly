@@ -1,0 +1,46 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "Log an expense in ${applicationName}": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ile harcama ekle"
+          }
+        }
+      }
+    },
+    "Add an expense to ${applicationName}": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} uygulamasına harcama ekle"
+          }
+        }
+      }
+    },
+    "Log ${category} in ${applicationName}": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} ile ${category} ekle"
+          }
+        }
+      }
+    },
+    "Open ${applicationName} keypad": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${applicationName} tuş takımını aç"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

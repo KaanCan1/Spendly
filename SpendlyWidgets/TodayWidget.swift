@@ -113,7 +113,7 @@ struct TodayWidgetView: View {
                             .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(.plain)
-                        .accessibilityLabel("log \(usual.category.name) \(usual.amount.formatted(compact: true))")
+                        .accessibilityLabel("log \(usual.category.displayName) \(usual.amount.formatted(compact: true))")
                     }
                 }
             }
