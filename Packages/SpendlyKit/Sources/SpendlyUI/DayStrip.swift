@@ -36,7 +36,7 @@ public struct DayStrip: View {
         } label: {
             VStack(spacing: 2) {
                 Text(day, format: .dateTime.day())
-                    .font(SpendlyFont.number(18, .medium))
+                    .font(SpendlyFont.number(.body, .semibold))
                 (calendar.isDateInToday(day) ? Text("today") : Text(verbatim: day.formatted(.dateTime.weekday(.abbreviated)).lowercased()))
                     .font(SpendlyFont.micro)
                     .opacity(isSelected ? 0.9 : 0.6)
@@ -51,5 +51,7 @@ public struct DayStrip: View {
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
+        // "day-0" is today, "day-1" yesterday, … (stable ids for UI tests).
+        .accessibilityIdentifier("day-\(calendar.dateComponents([.day], from: day, to: calendar.startOfDay(for: .now)).day ?? 0)")
     }
 }

@@ -27,11 +27,14 @@ struct SettingsView: View {
                     if pro.isPro {
                         Label("spendly pro is active", systemImage: "checkmark.seal")
                             .foregroundStyle(SpendlyColor.signature)
+                            .accessibilityIdentifier("proActive")
                     } else {
                         Button { paywall = .general } label: {
-                            Label("upgrade to spendly pro", systemImage: "sparkles")
+                            // Inline symbol so the line wraps as one at large text sizes.
+                            Text("\(Image(systemName: "sparkles"))  upgrade to spendly pro")
                                 .foregroundStyle(SpendlyColor.signature)
                         }
+                        .accessibilityIdentifier("upgradeButton")
                     }
                 }
 
@@ -45,11 +48,14 @@ struct SettingsView: View {
 
                 Section {
                     Toggle("daily recap", isOn: notificationBinding($dailyEnabled))
+                        .accessibilityIdentifier("dailyToggle")
                     if dailyEnabled {
                         DatePicker("at", selection: dailyTime, displayedComponents: .hourAndMinute)
                     }
                     Toggle("weekly summary", isOn: notificationBinding($weeklyEnabled))
+                        .accessibilityIdentifier("weeklyToggle")
                     Toggle("budget alerts", isOn: notificationBinding($budgetAlerts))
+                        .accessibilityIdentifier("budgetAlertsToggle")
                 } header: {
                     Text("notifications")
                 } footer: {
@@ -66,6 +72,7 @@ struct SettingsView: View {
                     } label: {
                         Label("categories and limits", systemImage: "square.grid.2x2")
                     }
+                    .accessibilityIdentifier("categoriesLink")
                 }
 
                 Section {
@@ -76,6 +83,7 @@ struct SettingsView: View {
                         ) {
                             Label("export as csv", systemImage: "square.and.arrow.up")
                         }
+                        .accessibilityIdentifier("exportShareLink")
                     } else {
                         Button { paywall = .export } label: {
                             HStack {
@@ -89,6 +97,7 @@ struct SettingsView: View {
                                     .background(Capsule().fill(SpendlyColor.signature))
                             }
                         }
+                        .accessibilityIdentifier("exportLocked")
                     }
                 }
             }
@@ -100,8 +109,12 @@ struct SettingsView: View {
             .navigationTitle(Text("settings"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
+                // Not .confirmationAction: its prominent lime button puts white text on lime.
+                ToolbarItem(placement: .topBarTrailing) {
                     Button("done") { dismiss() }
+                        .fontWeight(.semibold)
+                        .foregroundStyle(SpendlyColor.ink)
+                        .accessibilityIdentifier("settingsDone")
                 }
             }
         }

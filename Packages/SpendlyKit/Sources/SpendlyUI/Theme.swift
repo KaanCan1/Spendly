@@ -36,19 +36,27 @@ public enum SpendlyColor {
 /// SF Pro throughout. Large numbers are light-weight with tight tracking — the quiet, expensive
 /// look of Apple's own Wallet and Stocks — while labels stay small and medium-weight.
 public enum SpendlyFont {
+    // Display numerals keep a fixed size: they are already large and the layout is built on them.
     public static let amount = number(76, .light)
     public static let total = number(54, .light)
-    public static let title = Font.system(size: 22, weight: .semibold)
     public static let keypad = number(30, .light)
-    public static let pill = Font.system(size: 15, weight: .semibold)
-    public static let body = Font.system(size: 17, weight: .regular)
-    public static let label = Font.system(size: 15, weight: .medium)
-    public static let caption = Font.system(size: 13, weight: .regular)
-    public static let micro = Font.system(size: 12, weight: .medium)
 
-    /// Tabular figures so amounts don't jitter while typing or rolling.
+    // Everything else follows the user's text size (Dynamic Type).
+    public static let title = Font.system(.title2, weight: .semibold)
+    public static let pill = Font.system(.subheadline, weight: .semibold)
+    public static let body = Font.system(.body)
+    public static let label = Font.system(.subheadline, weight: .medium)
+    public static let caption = Font.system(.footnote)
+    public static let micro = Font.system(.caption, weight: .medium)
+
+    /// Fixed-size tabular figures, for display numerals only.
     public static func number(_ size: CGFloat, _ weight: Font.Weight) -> Font {
         .system(size: size, weight: weight).monospacedDigit()
+    }
+
+    /// Tabular figures that scale with Dynamic Type, for amounts in rows, pills and lists.
+    public static func number(_ style: Font.TextStyle, _ weight: Font.Weight) -> Font {
+        .system(style, weight: weight).monospacedDigit()
     }
 
     /// Display-size numbers get tighter tracking, like SF Pro Display in Apple's apps.
@@ -76,9 +84,11 @@ public struct PillButtonStyle: ButtonStyle {
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(SpendlyFont.pill)
-            .lineLimit(1)
+            // Wraps at the largest text sizes rather than cutting the label off.
+            .multilineTextAlignment(.center)
             .padding(.horizontal, 16)
-            .frame(minHeight: 40)
+            .padding(.vertical, 4)
+            .frame(minHeight: 44)
             .foregroundStyle(foreground)
             .background(Capsule().fill(background))
             .contentShape(Capsule())

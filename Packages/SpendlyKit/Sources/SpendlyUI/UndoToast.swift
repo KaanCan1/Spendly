@@ -24,6 +24,9 @@ public struct UndoToast: View {
             Button("undo", action: onUndo)
                 .font(SpendlyFont.pill)
                 .foregroundStyle(SpendlyColor.signature)
+                .frame(minWidth: 44, minHeight: 44)
+                .contentShape(Rectangle())
+                .accessibilityIdentifier("undoButton")
         }
         .padding(.horizontal, 20)
         .frame(height: 48)

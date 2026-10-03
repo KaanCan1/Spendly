@@ -57,6 +57,16 @@ public struct Keypad: View {
         }
         .buttonStyle(KeyPressStyle())
         .accessibilityLabel(Self.accessibilityLabel(for: key))
+        .accessibilityIdentifier(Self.identifier(for: key))
+    }
+
+    /// Stable ids for UI tests: "key-0"…"key-9", "key-decimal", "key-delete".
+    private static func identifier(for key: AmountInput.Key) -> String {
+        switch key {
+        case .digit(let value): "key-\(value)"
+        case .decimalSeparator: "key-decimal"
+        case .delete: "key-delete"
+        }
     }
 
     private static func accessibilityLabel(for key: AmountInput.Key) -> Text {

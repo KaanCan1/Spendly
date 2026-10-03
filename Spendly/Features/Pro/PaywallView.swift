@@ -41,10 +41,12 @@ struct PaywallView: View {
                         .background(Circle().fill(SpendlyColor.raised))
                 }
                 .accessibilityLabel(Text("close"))
+                .accessibilityIdentifier("paywallClose")
             }
 
             VStack(alignment: .leading, spacing: 8) {
                 Text("spendly pro")
+                    .accessibilityIdentifier("paywallTitle")
                     .font(SpendlyFont.number(40, .light))
                     .tracking(SpendlyFont.tracking(for: 40))
                     .foregroundStyle(SpendlyColor.ink)
@@ -66,6 +68,7 @@ struct PaywallView: View {
 
             HStack {
                 Button("restore purchases") { Task { await pro.restore() } }
+                    .accessibilityIdentifier("restoreButton")
                 Spacer()
                 Text("cancel anytime in settings")
             }
@@ -106,6 +109,7 @@ struct PaywallView: View {
         case .unavailable:
             VStack(spacing: 12) {
                 Text("the app store isn't reachable right now.")
+                    .accessibilityIdentifier("storeUnavailable")
                     .font(SpendlyFont.caption)
                     .foregroundStyle(SpendlyColor.muted)
                 Button("try again") { Task { await pro.loadProducts() } }
@@ -141,7 +145,7 @@ struct PaywallView: View {
                 if pro.purchasing == product.id {
                     ProgressView().tint(highlighted ? SpendlyColor.onSignature : SpendlyColor.ink)
                 } else {
-                    detail.font(SpendlyFont.number(15, .medium))
+                    detail.font(SpendlyFont.number(.subheadline, .medium))
                 }
             }
             .foregroundStyle(highlighted ? SpendlyColor.onSignature : SpendlyColor.ink)
@@ -154,5 +158,6 @@ struct PaywallView: View {
         }
         .buttonStyle(.plain)
         .disabled(pro.purchasing != nil)
+        .accessibilityIdentifier("plan-\(product.id)")
     }
 }

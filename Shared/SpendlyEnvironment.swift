@@ -11,11 +11,22 @@ import WidgetKit
 enum SpendlyEnvironment {
     static let isExtension = Bundle.main.bundleURL.pathExtension == "appex"
 
+    /// UI tests launch with `-uitest`: every launch starts from an empty in-memory store.
+    static let isUITest: Bool = {
+        #if DEBUG
+        ProcessInfo.processInfo.arguments.contains("-uitest")
+        #else
+        false
+        #endif
+    }()
+
     static let store: SwiftDataExpenseStore = {
         let container: ModelContainer
         do {
             // Only the app mirrors to iCloud; extensions read and write the local store.
-            container = try SpendlySchema.makeContainer(cloudSync: !isExtension)
+            container = isUITest
+                ? try SpendlySchema.makeInMemoryContainer()
+                : try SpendlySchema.makeContainer(cloudSync: !isExtension)
         } catch {
             // A broken on-disk store must not brick the app; keep it usable in memory and log loudly.
             assertionFailure("Failed to open store: \(error)")

@@ -9,6 +9,9 @@ public struct CategoryChip: View {
     let isCurrent: Bool
     let action: () -> Void
 
+    @ScaledMetric(relativeTo: .title2) private var circle: CGFloat = 54
+    @ScaledMetric(relativeTo: .title2) private var width: CGFloat = 68
+
     public init(
         emoji: String,
         name: String,
@@ -29,25 +32,28 @@ public struct CategoryChip: View {
         Button(action: action) {
             VStack(spacing: 6) {
                 Text(emoji)
-                    .font(.system(size: 24))
-                    .frame(width: 54, height: 54)
-                    .background(Circle().fill(SpendlyColor.tint(colorHex)))
+                    .font(.title2)
+                    .opacity(isEnabled ? 1 : 0.45)
+                    .frame(width: circle, height: circle)
+                    .background(Circle().fill(SpendlyColor.tint(colorHex)).opacity(isEnabled ? 1 : 0.5))
                     .overlay {
                         // "current" ring when editing an entry: shows which category it has now.
                         Circle()
                             .strokeBorder(SpendlyColor.signature, lineWidth: isCurrent ? 2 : 0)
                             .padding(-4)
                     }
+                // Dimmed to the muted gray, not by opacity, so the name stays readable.
                 Text(name)
                     .font(SpendlyFont.micro)
-                    .foregroundStyle(SpendlyColor.ink)
+                    .foregroundStyle(isEnabled ? SpendlyColor.ink : SpendlyColor.muted)
                     .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                    .allowsTightening(true)
             }
-            .frame(width: 68)
+            .frame(width: width)
             .contentShape(Rectangle())
         }
         .buttonStyle(SquishStyle())
-        .opacity(isEnabled ? 1 : 0.35)
         .animation(.spendly, value: isEnabled)
         .disabled(!isEnabled)
         .accessibilityLabel("save as \(name)")
