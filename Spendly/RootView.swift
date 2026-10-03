@@ -35,5 +35,7 @@ struct RootView: View {
     private func dataChanged() {
         ReminderScheduler.reschedule(store: store, currencyCode: currencyCode)
         SpendlyEnvironment.reloadWidgets()
+        // Lets Siri match "log coffee in Spendly" against the current category names.
+        SpendlyShortcuts.updateAppShortcutParameters()
     }
 }

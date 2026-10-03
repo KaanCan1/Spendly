@@ -59,11 +59,11 @@ public struct Keypad: View {
         .accessibilityLabel(Self.accessibilityLabel(for: key))
     }
 
-    private static func accessibilityLabel(for key: AmountInput.Key) -> String {
+    private static func accessibilityLabel(for key: AmountInput.Key) -> Text {
         switch key {
-        case .digit(let value): "\(value)"
-        case .decimalSeparator: "decimal point"
-        case .delete: "delete"
+        case .digit(let value): Text(verbatim: "\(value)")
+        case .decimalSeparator: Text("decimal point")
+        case .delete: Text("delete")
         }
     }
 }

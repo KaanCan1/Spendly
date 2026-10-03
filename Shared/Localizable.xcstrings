@@ -1,0 +1,1329 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "%@  %@": {
+      "shouldTranslate": false
+    },
+    "%@ %@": {
+      "shouldTranslate": false
+    },
+    "%@ %@ %@ again?": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ %@ %@ tekrar?"
+          }
+        }
+      }
+    },
+    "%@ %@ is at %lld%% of its budget": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ %2$@ bütçesi %%%3$lld doldu"
+          }
+        }
+      }
+    },
+    "%@ %@ is over budget": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ %@ bütçeyi aştı"
+          }
+        }
+      }
+    },
+    "%@ / month": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ / ay"
+          }
+        }
+      }
+    },
+    "%@ of %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ / %2$@"
+          }
+        }
+      }
+    },
+    "%@ of %@ this month": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bu ay %1$@ / %2$@"
+          }
+        }
+      }
+    },
+    "%@ once": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ tek sefer"
+          }
+        }
+      }
+    },
+    "%@ today": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bugün %@"
+          }
+        }
+      }
+    },
+    "%@ · monthly limit": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · aylık limit"
+          }
+        }
+      }
+    },
+    "%lld": {
+      "shouldTranslate": false
+    },
+    "%lld of %lld categories of your own used. archived categories keep labeling past expenses.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kendi kategorilerinden %1$lld / %2$lld kullanıldı. arşivlenen kategoriler geçmiş harcamalarda görünmeye devam eder."
+          }
+        }
+      }
+    },
+    "%lld%% used": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%%%lld kullanıldı"
+          }
+        }
+      }
+    },
+    "+": {
+      "shouldTranslate": false
+    },
+    "0": {
+      "shouldTranslate": false
+    },
+    "Adds an expense to Spendly without opening the app.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uygulamayı açmadan Spendly'ye harcama ekler."
+          }
+        }
+      }
+    },
+    "Amount": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tutar"
+          }
+        }
+      }
+    },
+    "Amount in minor units": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kuruş cinsinden tutar"
+          }
+        }
+      }
+    },
+    "Category": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kategori"
+          }
+        }
+      }
+    },
+    "Currency": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para birimi"
+          }
+        }
+      }
+    },
+    "How much did you spend?": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ne kadar harcadın?"
+          }
+        }
+      }
+    },
+    "Log ${amount} for ${category}": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "${category} için ${amount} ekle"
+          }
+        }
+      }
+    },
+    "Log a usual expense": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alışık olduğun harcamayı ekle"
+          }
+        }
+      }
+    },
+    "Log an expense": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Harcama ekle"
+          }
+        }
+      }
+    },
+    "Log expense": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Harcama ekle"
+          }
+        }
+      }
+    },
+    "Logged %@ %@. Today: %@.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ %2$@ eklendi. Bugün: %3$@."
+          }
+        }
+      }
+    },
+    "Note": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not"
+          }
+        }
+      }
+    },
+    "OK": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tamam"
+          }
+        }
+      }
+    },
+    "Open quick add": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hızlı eklemeyi aç"
+          }
+        }
+      }
+    },
+    "Opens Spendly on the keypad, ready to log.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spendly'yi tuş takımında, kayda hazır açar."
+          }
+        }
+      }
+    },
+    "Opens Spendly on the keypad.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spendly'yi tuş takımında açar."
+          }
+        }
+      }
+    },
+    "Quick add": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hızlı ekle"
+          }
+        }
+      }
+    },
+    "Today": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bugün"
+          }
+        }
+      }
+    },
+    "Today's spending, and your usual expenses one tap away.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bugünkü harcaman ve alışık olduğun harcamalar tek dokunuş uzağında."
+          }
+        }
+      }
+    },
+    "Today's total, or a shortcut to the keypad.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bugünün toplamı ya da tuş takımına kısayol."
+          }
+        }
+      }
+    },
+    "What was it for?": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ne için?"
+          }
+        }
+      }
+    },
+    "a budget for every category": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "her kategori için bütçe"
+          }
+        }
+      }
+    },
+    "a quiet week, nothing logged.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sakin bir hafta, hiç kayıt yok."
+          }
+        }
+      }
+    },
+    "anything to log today? it takes two taps.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bugün eklenecek bir şey var mı? iki dokunuş yeter."
+          }
+        }
+      }
+    },
+    "archive": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "arşivle"
+          }
+        }
+      }
+    },
+    "archived categories keep labeling past expenses.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "arşivlenen kategoriler geçmiş harcamalarda görünmeye devam eder."
+          }
+        }
+      }
+    },
+    "at": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "saat"
+          }
+        }
+      }
+    },
+    "bills": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "faturalar"
+          }
+        }
+      }
+    },
+    "budget alerts": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bütçe uyarıları"
+          }
+        }
+      }
+    },
+    "cancel": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "vazgeç"
+          }
+        }
+      }
+    },
+    "cancel anytime in settings": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ayarlardan istediğin zaman iptal et"
+          }
+        }
+      }
+    },
+    "categories": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kategoriler"
+          }
+        }
+      }
+    },
+    "categories and limits": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kategoriler ve limitler"
+          }
+        }
+      }
+    },
+    "close": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kapat"
+          }
+        }
+      }
+    },
+    "coffee": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kahve"
+          }
+        }
+      }
+    },
+    "color": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "renk"
+          }
+        }
+      }
+    },
+    "color %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "renk %@"
+          }
+        }
+      }
+    },
+    "csv export": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "csv dışa aktarma"
+          }
+        }
+      }
+    },
+    "csv export is part of spendly pro.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "csv dışa aktarma spendly pro'ya dahil."
+          }
+        }
+      }
+    },
+    "currency": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "para birimi"
+          }
+        }
+      }
+    },
+    "currency %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "para birimi %@"
+          }
+        }
+      }
+    },
+    "daily recap": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "günlük özet"
+          }
+        }
+      }
+    },
+    "decimal point": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ondalık ayırıcı"
+          }
+        }
+      }
+    },
+    "delete": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sil"
+          }
+        }
+      }
+    },
+    "done": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bitti"
+          }
+        }
+      }
+    },
+    "edit category": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kategoriyi düzenle"
+          }
+        }
+      }
+    },
+    "edit limit": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "limiti düzenle"
+          }
+        }
+      }
+    },
+    "editing": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "düzenleniyor"
+          }
+        }
+      }
+    },
+    "emoji": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "emoji"
+          }
+        }
+      }
+    },
+    "expense, switch to income": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "gider, gelire geç"
+          }
+        }
+      }
+    },
+    "expenses": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "giderler"
+          }
+        }
+      }
+    },
+    "export as csv": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "csv olarak dışa aktar"
+          }
+        }
+      }
+    },
+    "food": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "yemek"
+          }
+        }
+      }
+    },
+    "freelance": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "serbest iş"
+          }
+        }
+      }
+    },
+    "fun": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "eğlence"
+          }
+        }
+      }
+    },
+    "gift": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "hediye"
+          }
+        }
+      }
+    },
+    "health": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sağlık"
+          }
+        }
+      }
+    },
+    "income": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "gelir"
+          }
+        }
+      }
+    },
+    "income, switch to expense": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "gelir, gidere geç"
+          }
+        }
+      }
+    },
+    "lifetime": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ömür boyu"
+          }
+        }
+      }
+    },
+    "log %@ %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ %@ ekle"
+          }
+        }
+      }
+    },
+    "log an expense": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "harcama ekle"
+          }
+        }
+      }
+    },
+    "long press to clear": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "temizlemek için basılı tut"
+          }
+        }
+      }
+    },
+    "monthly": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "aylık"
+          }
+        }
+      }
+    },
+    "monthly limit": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "aylık limit"
+          }
+        }
+      }
+    },
+    "name": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ad"
+          }
+        }
+      }
+    },
+    "new category": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "yeni kategori"
+          }
+        }
+      }
+    },
+    "nice, logged %@ %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "tamam, eklendi %@ %@"
+          }
+        }
+      }
+    },
+    "no limit": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "limit yok"
+          }
+        }
+      }
+    },
+    "note": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "not"
+          }
+        }
+      }
+    },
+    "nothing logged in %@ yet": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ için henüz kayıt yok"
+          }
+        }
+      }
+    },
+    "nothing logged today. anything to add?": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bugün hiç kayıt yok. eklemek istediğin bir şey var mı?"
+          }
+        }
+      }
+    },
+    "notifications": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bildirimler"
+          }
+        }
+      }
+    },
+    "notifications are off for spendly. turn them on in ios settings.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "spendly için bildirimler kapalı. ios ayarlarından açabilirsin."
+          }
+        }
+      }
+    },
+    "opens the overview": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "özeti açar"
+          }
+        }
+      }
+    },
+    "other": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "diğer"
+          }
+        }
+      }
+    },
+    "pro": {
+      "shouldTranslate": false
+    },
+    "purchase failed": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "satın alma başarısız"
+          }
+        }
+      }
+    },
+    "remove limit": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "limiti kaldır"
+          }
+        }
+      }
+    },
+    "restore purchases": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "satın alımları geri yükle"
+          }
+        }
+      }
+    },
+    "salary": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "maaş"
+          }
+        }
+      }
+    },
+    "save": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kaydet"
+          }
+        }
+      }
+    },
+    "save as %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ olarak kaydet"
+          }
+        }
+      }
+    },
+    "set a monthly limit": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "aylık limit belirle"
+          }
+        }
+      }
+    },
+    "set limit": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "limiti kaydet"
+          }
+        }
+      }
+    },
+    "settings": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ayarlar"
+          }
+        }
+      }
+    },
+    "shopping": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "alışveriş"
+          }
+        }
+      }
+    },
+    "spending split by category": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kategorilere göre harcama dağılımı"
+          }
+        }
+      }
+    },
+    "spendly pro": {
+      "shouldTranslate": false
+    },
+    "spendly pro is active": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "spendly pro aktif"
+          }
+        }
+      }
+    },
+    "spendly · today": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "spendly · bugün"
+          }
+        }
+      }
+    },
+    "spendly.csv": {
+      "shouldTranslate": false
+    },
+    "spent in %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ ayında harcanan"
+          }
+        }
+      }
+    },
+    "spent in %@ · +%@ earned": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ ayında harcanan · +%2$@ gelir"
+          }
+        }
+      }
+    },
+    "spent this month": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bu ay harcanan"
+          }
+        }
+      }
+    },
+    "spent this month · +%@ earned": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bu ay harcanan · +%@ gelir"
+          }
+        }
+      }
+    },
+    "support an independent app": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bağımsız bir uygulamaya destek ol"
+          }
+        }
+      }
+    },
+    "support spendly and unlock everything.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "spendly'ye destek ol, her şeyin kilidini aç."
+          }
+        }
+      }
+    },
+    "tap to log your first": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ilk kaydın için dokun"
+          }
+        }
+      }
+    },
+    "the app store isn't reachable right now.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "app store'a şu an ulaşılamıyor."
+          }
+        }
+      }
+    },
+    "the free version includes %lld categories of your own.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ücretsiz sürüm kendi oluşturduğun %lld kategoriyi içerir."
+          }
+        }
+      }
+    },
+    "the free version includes %lld monthly budget.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ücretsiz sürüm %lld aylık bütçe içerir."
+          }
+        }
+      }
+    },
+    "the weekly summary arrives on sunday at 18:00. budget alerts come at 80% and 100% of a limit.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "haftalık özet pazar 18:00'de gelir. bütçe uyarıları limitin %80 ve %100 seviyesinde gelir."
+          }
+        }
+      }
+    },
+    "this month": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bu ay"
+          }
+        }
+      }
+    },
+    "this week: %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bu hafta: %@"
+          }
+        }
+      }
+    },
+    "this week: %@, mostly on %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bu hafta: %1$@, en çok %2$@"
+          }
+        }
+      }
+    },
+    "today": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bugün"
+          }
+        }
+      }
+    },
+    "today %@%@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bugün %@%@"
+          }
+        }
+      }
+    },
+    "today you spent %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bugün %@ harcadın"
+          }
+        }
+      }
+    },
+    "today you spent %@, mostly on %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bugün %1$@ harcadın, en çok %2$@"
+          }
+        }
+      }
+    },
+    "transport": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ulaşım"
+          }
+        }
+      }
+    },
+    "try again": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "tekrar dene"
+          }
+        }
+      }
+    },
+    "type": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "tür"
+          }
+        }
+      }
+    },
+    "type an amount, then tap a category": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "tutarı yaz, sonra bir kategoriye dokun"
+          }
+        }
+      }
+    },
+    "uncategorized": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kategorisiz"
+          }
+        }
+      }
+    },
+    "undo": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "geri al"
+          }
+        }
+      }
+    },
+    "unlimited categories": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sınırsız kategori"
+          }
+        }
+      }
+    },
+    "upgrade to spendly pro": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "spendly pro'ya geç"
+          }
+        }
+      }
+    },
+    "weekly summary": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "haftalık özet"
+          }
+        }
+      }
+    },
+    "which day?": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "hangi gün?"
+          }
+        }
+      }
+    },
+    "yesterday": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "dün"
+          }
+        }
+      }
+    },
+    "·": {
+      "shouldTranslate": false
+    },
+    "−": {
+      "shouldTranslate": false
+    },
+    "−%@": {
+      "shouldTranslate": false
+    }
+  },
+  "version": "1.0"
+}

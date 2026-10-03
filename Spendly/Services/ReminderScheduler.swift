@@ -22,10 +22,6 @@ enum ReminderScheduler {
     /// Days ahead to keep scheduled, so reminders keep coming even if the app isn't opened.
     private static let daysAhead = 7
 
-    static func requestAuthorization() async -> Bool {
-        (try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound])) ?? false
-    }
-
     static func reschedule(
         store: any ExpenseStore,
         currencyCode: String,
@@ -50,7 +46,7 @@ enum ReminderScheduler {
                 // Only today's numbers are known; later days get a gentle nudge.
                 let body = calendar.isDate(fireDate, inSameDayAs: now)
                     ? dailySummary(store: store, currencyCode: currencyCode, calendar: calendar, locale: locale, now: now)
-                    : "anything to log today? it takes two taps."
+                    : String(localized: "anything to log today? it takes two taps.")
                 schedule(id: "\(dailyPrefix)\(offset)", body: body, at: fireDate, calendar: calendar)
             }
         }
@@ -73,22 +69,26 @@ enum ReminderScheduler {
     ) -> String {
         let today = calendar.dayInterval(containing: now)
         let total = store.total(in: today, kind: .expense, currencyCode: currencyCode)
-        guard !total.isZero else { return "nothing logged today — anything to add?" }
+        guard !total.isZero else { return String(localized: "nothing logged today. anything to add?") }
         let top = topCategory(store.expenses(in: today, kind: .expense), currencyCode: currencyCode)
-        return "today you spent \(total.formatted(locale: locale, compact: true))" + (top.map { " — mostly \($0)" } ?? "")
+        let amount = total.formatted(locale: locale, compact: true)
+        if let top { return String(localized: "today you spent \(amount), mostly on \(top)") }
+        return String(localized: "today you spent \(amount)")
     }
 
     private static func weeklySummary(store: any ExpenseStore, week: DateInterval, currencyCode: String, locale: Locale) -> String {
         let total = store.total(in: week, kind: .expense, currencyCode: currencyCode)
-        guard !total.isZero else { return "a quiet week — nothing logged." }
+        guard !total.isZero else { return String(localized: "a quiet week, nothing logged.") }
         let top = topCategory(store.expenses(in: week, kind: .expense), currencyCode: currencyCode)
-        return "this week: \(total.formatted(locale: locale, compact: true))" + (top.map { " — mostly \($0)" } ?? "")
+        let amount = total.formatted(locale: locale, compact: true)
+        if let top { return String(localized: "this week: \(amount), mostly on \(top)") }
+        return String(localized: "this week: \(amount)")
     }
 
     private static func topCategory(_ entries: [ExpenseRecord], currencyCode: String) -> String? {
         var sums: [String: Int64] = [:]
         for entry in entries where entry.amount.currencyCode == currencyCode {
-            guard let name = entry.category?.name else { continue }
+            guard let name = entry.category?.displayName else { continue }
             sums[name, default: 0] += entry.amount.minorUnits
         }
         return sums.max { $0.value < $1.value }?.key

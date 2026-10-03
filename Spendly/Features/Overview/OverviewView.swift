@@ -19,6 +19,8 @@ struct OverviewView: View {
     @State private var editing: ExpenseRecord?
     @State private var limitTarget: CategoryRecord?
     @State private var showingSettings = false
+    @State private var paywall: ProFeature?
+    @Environment(ProStore.self) private var pro
 
     var body: some View {
         let interval = calendar.monthInterval(containing: month)
@@ -74,6 +76,9 @@ struct OverviewView: View {
         .sheet(isPresented: $showingSettings) {
             SettingsView(store: store, currencyCode: $currencyCode)
         }
+        .sheet(item: $paywall) { feature in
+            PaywallView(feature: feature)
+        }
     }
 
     // MARK: Zone 1
@@ -112,8 +117,7 @@ struct OverviewView: View {
                     .contentTransition(.numericText())
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
-                Text("spent \(isCurrentMonth ? "this month" : "in " + monthName)"
-                    + (earned.isZero ? "" : " · +\(earned.formatted(locale: locale, compact: true)) earned"))
+                Text(verbatim: caption(earned: earned))
                     .font(SpendlyFont.caption)
                     .foregroundStyle(SpendlyColor.muted)
             }
@@ -135,10 +139,22 @@ struct OverviewView: View {
         .buttonStyle(.plain)
     }
 
+    /// "spent this month" or "spent in september", plus income when there was any.
+    private func caption(earned: Money) -> String {
+        let month = month.formatted(.dateTime.month(.wide)).lowercased()
+        guard !earned.isZero else {
+            return isCurrentMonth ? String(localized: "spent this month") : String(localized: "spent in \(month)")
+        }
+        let income = earned.formatted(locale: locale, compact: true)
+        return isCurrentMonth
+            ? String(localized: "spent this month · +\(income) earned")
+            : String(localized: "spent in \(month) · +\(income) earned")
+    }
+
     private var isCurrentMonth: Bool { calendar.isDate(month, equalTo: .now, toGranularity: .month) }
 
     private var monthName: String {
-        isCurrentMonth ? "this month" : month.formatted(.dateTime.month(.wide)).lowercased()
+        isCurrentMonth ? String(localized: "this month") : month.formatted(.dateTime.month(.wide)).lowercased()
     }
 
     // MARK: Zone 2
@@ -167,10 +183,20 @@ struct OverviewView: View {
                 BudgetDetail(
                     category: category,
                     spent: Money(minorUnits: selected.minor, currencyCode: currencyCode),
-                    onEditLimit: { limitTarget = category }
+                    onEditLimit: { editLimit(category) }
                 )
                 .transition(.opacity.combined(with: .move(edge: .top)))
             }
+        }
+    }
+
+    /// Editing an existing limit is always free; a new one counts against the free tier.
+    private func editLimit(_ category: CategoryRecord) {
+        let others = store.categories(kind: .expense).filter { $0.monthlyLimitMinor != nil && $0.id != category.id }.count
+        if category.monthlyLimitMinor != nil || ProLimits.canSetBudget(otherBudgets: others, isPro: pro.isPro) {
+            limitTarget = category
+        } else {
+            paywall = .budgets
         }
     }
 
@@ -203,8 +229,8 @@ struct OverviewView: View {
     }
 
     private func dayTitle(_ day: Date) -> String {
-        if calendar.isDateInToday(day) { return "today" }
-        if calendar.isDateInYesterday(day) { return "yesterday" }
+        if calendar.isDateInToday(day) { return String(localized: "today") }
+        if calendar.isDateInYesterday(day) { return String(localized: "yesterday") }
         return day.formatted(.dateTime.weekday(.wide).day().month(.abbreviated)).lowercased()
     }
 }
@@ -274,7 +300,7 @@ private struct BudgetDetail: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .firstTextBaseline) {
-                Text("\(category.emoji) \(category.name)")
+                Text("\(category.emoji) \(category.displayName)")
                     .font(SpendlyFont.pill)
                     .foregroundStyle(SpendlyColor.ink)
                 Spacer()
@@ -330,7 +356,7 @@ struct EntryRow: View {
                 .frame(width: 44, height: 44)
                 .background(Circle().fill(SpendlyColor.tint(entry.category?.colorHex ?? "#9AA0A6")))
             VStack(alignment: .leading, spacing: 2) {
-                Text(entry.category?.name ?? "uncategorized")
+                Text(entry.category?.displayName ?? String(localized: "uncategorized"))
                     .font(SpendlyFont.body)
                     .foregroundStyle(SpendlyColor.ink)
                 if let note = entry.note {

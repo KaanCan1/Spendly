@@ -33,6 +33,8 @@ enum DefaultCategories {
         Seed(id: uuid("0104"), name: "other", emoji: "➕", colorHex: "#9AA0A6", kind: .income),
     ]
 
+    static let ids = Set(all.map(\.id))
+
     private static func uuid(_ suffix: String) -> UUID {
         UUID(uuidString: "5BE0D1E5-0000-4000-8000-00000000\(suffix)")!
     }
