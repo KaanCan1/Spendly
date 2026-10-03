@@ -39,7 +39,7 @@ struct OverviewView: View {
             }
 
             if entries.isEmpty {
-                Text("nothing logged in \(monthName) yet")
+                Text(isCurrentMonth ? "nothing logged this month yet" : "nothing logged in \(monthName) yet")
                     .font(SpendlyFont.body)
                     .foregroundStyle(SpendlyColor.muted)
                     .frame(maxWidth: .infinity)
@@ -51,6 +51,7 @@ struct OverviewView: View {
                     ForEach(group.entries) { entry in
                         Button { editing = entry } label: { EntryRow(entry: entry) }
                             .buttonStyle(.plain)
+                            .accessibilityIdentifier("entry-\(entry.category?.name ?? "none")")
                             .plainRow(insets: EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
                             .swipeActions(edge: .trailing) {
                                 Button("delete", role: .destructive) {
@@ -91,6 +92,9 @@ struct OverviewView: View {
                     Text(monthName)
                         .font(SpendlyFont.pill)
                         .foregroundStyle(SpendlyColor.ink)
+                        // The pill shares a row with the gear: past this size it would wrap.
+                        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+                        .fixedSize()
                         .frame(minWidth: 96)
                     monthButton("chevron.right", by: 1)
                         .disabled(isCurrentMonth)
@@ -107,6 +111,7 @@ struct OverviewView: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("settings")
+                .accessibilityIdentifier("settingsButton")
             }
 
             VStack(spacing: 4) {
@@ -115,6 +120,7 @@ struct OverviewView: View {
                     .tracking(SpendlyFont.tracking(for: 54))
                     .foregroundStyle(SpendlyColor.ink)
                     .contentTransition(.numericText())
+                    .accessibilityIdentifier("monthTotal")
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                 Text(verbatim: caption(earned: earned))
@@ -134,9 +140,11 @@ struct OverviewView: View {
             Image(systemName: symbol)
                 .font(.system(size: 13, weight: .bold))
                 .foregroundStyle(SpendlyColor.ink)
-                .frame(width: 40, height: 40)
+                .frame(width: 44, height: 44)
+                .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier(offset < 0 ? "previousMonth" : "nextMonth")
     }
 
     /// "spent this month" or "spent in september", plus income when there was any.
@@ -169,11 +177,13 @@ struct OverviewView: View {
                         Button { select(item.id) } label: {
                             HStack(spacing: 6) {
                                 Circle().fill(SpendlyColor.tint(item.colorHex, .strong)).frame(width: 10, height: 10)
-                                Text("\(item.emoji) \(Money(minorUnits: item.minor, currencyCode: currencyCode).formatted(locale: locale, compact: true))")
+                                Text(item.emoji)
+                                Text(Money(minorUnits: item.minor, currencyCode: currencyCode).formatted(locale: locale, compact: true))
                                     .foregroundStyle(item.isNearLimit ? SpendlyColor.warning : (selectedCategoryID == item.id ? SpendlyColor.canvas : SpendlyColor.ink))
                             }
                         }
                         .buttonStyle(PillButtonStyle(selectedCategoryID == item.id ? .selected : .quiet))
+                        .accessibilityIdentifier("legend-\(item.category?.name ?? "none")")
                     }
                 }
             }
@@ -221,6 +231,7 @@ struct OverviewView: View {
         .font(SpendlyFont.micro)
         .foregroundStyle(SpendlyColor.muted)
         .textCase(nil)
+        .fixedSize(horizontal: false, vertical: true)
         .padding(.horizontal, 4)
         .padding(.vertical, 6)
         .frame(maxWidth: .infinity)
@@ -306,7 +317,7 @@ private struct BudgetDetail: View {
                 Spacer()
                 if let limit = category.monthlyLimitMinor {
                     Text("\(spent.formatted(locale: locale, compact: true)) of \(Money(minorUnits: limit, currencyCode: spent.currencyCode).formatted(locale: locale, compact: true))")
-                        .font(SpendlyFont.number(15, .semibold))
+                        .font(SpendlyFont.number(.subheadline, .semibold))
                         .foregroundStyle(progress(limit) >= 0.8 ? SpendlyColor.warning : SpendlyColor.ink)
                 }
             }
@@ -329,15 +340,21 @@ private struct BudgetDetail: View {
                     Spacer()
                     Button("edit limit", action: onEditLimit)
                         .foregroundStyle(SpendlyColor.muted)
+                        .frame(minHeight: 44)
+                        .contentShape(Rectangle())
+                        .accessibilityIdentifier("editLimitButton")
                 }
                 .font(SpendlyFont.caption)
             } else {
                 Button("set a monthly limit", action: onEditLimit)
                     .buttonStyle(PillButtonStyle(.quiet))
+                    .accessibilityIdentifier("editLimitButton")
             }
         }
         .padding(16)
         .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(SpendlyColor.surface))
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("budgetDetail")
     }
 
     private func progress(_ limit: Int64) -> Double {
@@ -348,12 +365,18 @@ private struct BudgetDetail: View {
 struct EntryRow: View {
     let entry: ExpenseRecord
     @Environment(\.locale) private var locale
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @ScaledMetric(relativeTo: .title3) private var emojiCircle: CGFloat = 44
 
     var body: some View {
-        HStack(spacing: 14) {
+        // Stacked at the accessibility text sizes, where one row can't fit name and amount.
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+            : AnyLayout(HStackLayout(spacing: 14))
+        layout {
             Text(entry.category?.emoji ?? "•")
-                .font(.system(size: 20))
-                .frame(width: 44, height: 44)
+                .font(.title3)
+                .frame(width: emojiCircle, height: emojiCircle)
                 .background(Circle().fill(SpendlyColor.tint(entry.category?.colorHex ?? "#9AA0A6")))
             VStack(alignment: .leading, spacing: 2) {
                 Text(entry.category?.displayName ?? String(localized: "uncategorized"))
@@ -363,12 +386,12 @@ struct EntryRow: View {
                     Text(note)
                         .font(SpendlyFont.caption)
                         .foregroundStyle(SpendlyColor.muted)
-                        .lineLimit(1)
                 }
             }
-            Spacer()
+            if !dynamicTypeSize.isAccessibilitySize { Spacer() }
             Text((entry.kind == .expense ? "−" : "+") + entry.amount.formatted(locale: locale, compact: true))
-                .font(SpendlyFont.number(17, .medium))
+                .font(SpendlyFont.number(.body, .medium))
+                .fixedSize()
                 .foregroundStyle(entry.kind == .expense ? SpendlyColor.ink : SpendlyColor.signature)
         }
         .contentShape(Rectangle())

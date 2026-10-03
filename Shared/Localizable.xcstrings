@@ -1275,12 +1275,12 @@
         }
       }
     },
-    "upgrade to spendly pro": {
+    "%@  upgrade to spendly pro": {
       "localizations": {
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "spendly pro'ya geç"
+            "value": "%@  spendly pro'ya geç"
           }
         }
       }
@@ -1323,6 +1323,16 @@
     },
     "−%@": {
       "shouldTranslate": false
+    },
+    "nothing logged this month yet": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bu ay henüz kayıt yok"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

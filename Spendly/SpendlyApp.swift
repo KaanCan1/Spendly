@@ -8,6 +8,7 @@ struct SpendlyApp: App {
 
     init() {
         #if DEBUG
+        if SpendlyEnvironment.isUITest { UITestSupport.prepare() }
         DemoData.seedIfRequested(SpendlyEnvironment.store)
         #endif
     }

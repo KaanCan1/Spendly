@@ -26,6 +26,7 @@ struct EntryEditorView: View {
         VStack(spacing: 0) {
             HStack {
                 Button("cancel") { dismiss() }
+                    .accessibilityIdentifier("editorCancel")
                     .foregroundStyle(SpendlyColor.muted)
                 Spacer()
                 Text("editing")
@@ -40,6 +41,7 @@ struct EntryEditorView: View {
                 }
                 .foregroundStyle(SpendlyColor.warning)
                 .accessibilityLabel("delete")
+                .accessibilityIdentifier("deleteEntryButton")
             }
             .font(SpendlyFont.label)
             .padding(.horizontal, 24)
@@ -52,6 +54,7 @@ struct EntryEditorView: View {
                     .foregroundStyle(SpendlyColor.muted)
                 Text(input.displayString(locale: locale))
                     .font(SpendlyFont.number(64, .light))
+                    .accessibilityIdentifier("editorAmount")
                     .tracking(SpendlyFont.tracking(for: 64))
                     .foregroundStyle(SpendlyColor.ink)
                     .contentTransition(.numericText())
@@ -78,6 +81,7 @@ struct EntryEditorView: View {
                                     isEnabled: input.minorUnits > 0,
                                     isCurrent: category.id == entry.category?.id
                                 ) { commit(category) }
+                                .accessibilityIdentifier("chip-\(category.name)")
                             }
                         }
                         .padding(.vertical, 4)
@@ -159,6 +163,7 @@ struct LimitSheet: View {
                     .foregroundStyle(SpendlyColor.muted)
                 Text(input.displayString(locale: locale))
                     .font(SpendlyFont.number(56, .light))
+                    .accessibilityIdentifier("limitAmount")
                     .tracking(SpendlyFont.tracking(for: 56))
                     .foregroundStyle(input.isBlank ? SpendlyColor.muted.opacity(0.35) : SpendlyColor.ink)
                     .contentTransition(.numericText())
@@ -177,9 +182,11 @@ struct LimitSheet: View {
             HStack(spacing: 12) {
                 if category.monthlyLimitMinor != nil {
                     Button("remove limit") { save(nil) }
+                        .accessibilityIdentifier("removeLimitButton")
                         .buttonStyle(PillButtonStyle(.quiet))
                 }
                 Button("set limit") { save(input.minorUnits) }
+                    .accessibilityIdentifier("setLimitButton")
                     .buttonStyle(PillButtonStyle(.signature))
                     .disabled(input.minorUnits == 0)
                     .opacity(input.minorUnits == 0 ? 0.4 : 1)

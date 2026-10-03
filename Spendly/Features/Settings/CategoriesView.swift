@@ -23,6 +23,7 @@ struct CategoriesView: View {
                     Text("income").tag(EntryKind.income)
                 }
                 .pickerStyle(.segmented)
+                .accessibilityIdentifier("kindPicker")
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())
             }
@@ -30,6 +31,7 @@ struct CategoriesView: View {
             Section {
                 ForEach(categories) { category in
                     Button { editing = .existing(category) } label: { row(category) }
+                        .accessibilityIdentifier("categoryRow-\(category.name)")
                         .swipeActions(edge: .trailing) {
                             Button("archive", role: .destructive) {
                                 withAnimation { try? store.archiveCategory(id: category.id) }
@@ -42,17 +44,6 @@ struct CategoriesView: View {
                     ids.move(fromOffsets: from, toOffset: to)
                     try? store.reorderCategories(ids)
                 }
-
-                Button {
-                    if ProLimits.canAddCategory(customCount: customCount, isPro: pro.isPro) {
-                        editing = .new(kind)
-                    } else {
-                        paywall = .categories
-                    }
-                } label: {
-                    Label("new category", systemImage: "plus")
-                        .foregroundStyle(SpendlyColor.signature)
-                }
             } footer: {
                 if !pro.isPro {
                     Text("\(customCount) of \(ProLimits.freeCustomCategories) categories of your own used. archived categories keep labeling past expenses.")
@@ -64,7 +55,23 @@ struct CategoriesView: View {
         .scrollContentBackground(.hidden)
         .background(SpendlyColor.canvas.ignoresSafeArea())
         .navigationTitle(Text("categories"))
-        .toolbar { EditButton() }
+        .toolbar {
+            // In the toolbar, not at the end of the list: it must stay reachable however many
+            // categories there are.
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    if ProLimits.canAddCategory(customCount: customCount, isPro: pro.isPro) {
+                        editing = .new(kind)
+                    } else {
+                        paywall = .categories
+                    }
+                } label: {
+                    Label("new category", systemImage: "plus")
+                }
+                .accessibilityIdentifier("newCategoryButton")
+            }
+            ToolbarItem(placement: .primaryAction) { EditButton() }
+        }
         .sheet(item: $editing) { target in
             CategoryEditorView(store: store, target: target, currencyCode: currencyCode)
         }
@@ -88,7 +95,7 @@ struct CategoriesView: View {
             Spacer()
             if let limit = category.monthlyLimitMinor {
                 Text(Money(minorUnits: limit, currencyCode: currencyCode).formatted(compact: true))
-                    .font(SpendlyFont.number(15, .regular))
+                    .font(SpendlyFont.number(.subheadline, .regular))
                     .foregroundStyle(SpendlyColor.muted)
             }
         }
@@ -162,6 +169,7 @@ struct CategoryEditorView: View {
                             .foregroundStyle(SpendlyColor.ink)
                             .focused($nameFocused)
                             .submitLabel(.done)
+                            .accessibilityIdentifier("categoryNameField")
                     }
 
                     section("emoji") {
@@ -217,6 +225,7 @@ struct CategoryEditorView: View {
                                 .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(SpendlyColor.surface))
                             }
                             .buttonStyle(.plain)
+                            .accessibilityIdentifier("categoryLimitRow")
                         }
                     }
                 }
@@ -228,9 +237,11 @@ struct CategoryEditorView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("cancel") { dismiss() }
+                        .accessibilityIdentifier("categoryCancel")
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("save") { save() }
+                        .accessibilityIdentifier("categorySave")
                         .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
             }

@@ -126,30 +126,33 @@ struct QuickAddView: View {
         }
         .onGeometryChange(for: CGRect.self) { $0.frame(in: .named(Self.space)) } action: { pillFrame = $0 }
         .accessibilityHint("opens the overview")
+        .accessibilityIdentifier("todayPill")
     }
 
     // MARK: Zone 2
 
     private var middleZone: some View {
         VStack(spacing: 14) {
+            amountRow
+                .opacity(flight == nil ? 1 : 0)
+                .frame(height: 96)
+
+            metaLine
+                .frame(height: 44)
+
+            // One slot shared by the undo toast and the habit suggestion, so neither moves the
+            // amount, and the sign, currency and next amount stay usable while undo is offered.
+            // It only grows past 48pt at the largest text sizes, where the suggestion wraps.
             ZStack {
-                amountRow
-                    .opacity(toast == nil && flight == nil ? 1 : 0)
                 if let toast {
                     UndoToast(message: toast.message) { undo(toast) }
                         .fixedSize()
                         .transition(.scale(scale: 0.9).combined(with: .opacity))
+                } else {
+                    suggestion
                 }
             }
-            .frame(height: 96)
-
-            metaLine
-                .frame(height: 28)
-
-            // Fixed slot: the suggestion appearing or disappearing must not move the amount.
-            Color.clear
-                .frame(height: 40)
-                .overlay { suggestion }
+            .frame(maxWidth: .infinity, minHeight: 48)
         }
         .padding(.horizontal, 20)
     }
@@ -166,6 +169,7 @@ struct QuickAddView: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel(kind == .expense ? "expense, switch to income" : "income, switch to expense")
+            .accessibilityIdentifier("kindToggle")
 
             Menu {
                 Picker("currency", selection: $currencyCode) {
@@ -177,16 +181,19 @@ struct QuickAddView: View {
                 Text(Currency.symbol(for: currencyCode, locale: locale))
                     .font(SpendlyFont.number(34, .light))
                     .foregroundStyle(SpendlyColor.muted)
+                    .accessibilityIdentifier("currencySymbol")
             }
             .accessibilityLabel("currency \(currencyCode)")
+            .accessibilityIdentifier("currencyMenu")
 
             Text(input.displayString(locale: locale))
                 .font(SpendlyFont.amount)
                 .tracking(SpendlyFont.tracking(for: 76))
-                .foregroundStyle(input.isBlank ? SpendlyColor.muted.opacity(0.35) : SpendlyColor.ink)
+                .foregroundStyle(input.isBlank ? SpendlyColor.muted : SpendlyColor.ink)
                 .contentTransition(.numericText())
                 .lineLimit(1)
                 .minimumScaleFactor(0.4)
+                .accessibilityIdentifier("amountDisplay")
         }
         .onGeometryChange(for: CGRect.self) { $0.frame(in: .named(Self.space)) } action: { amountFrame = $0 }
         .modifier(Shake(trigger: rejectCount))
@@ -202,6 +209,7 @@ struct QuickAddView: View {
                 .submitLabel(.done)
                 .onSubmit { isEditingNote = false }
                 .onAppear { noteFocused = true }
+                .accessibilityIdentifier("noteField")
         } else {
             HStack(spacing: 8) {
                 Button { showingDayPicker = true } label: {
@@ -210,11 +218,20 @@ struct QuickAddView: View {
                         Image(systemName: "chevron.down").font(.system(size: 11, weight: .semibold))
                     }
                     .foregroundStyle(calendar.isDateInToday(selectedDay) ? SpendlyColor.muted : SpendlyColor.signature)
+                    .frame(minHeight: 44)
+                    .contentShape(Rectangle())
                 }
-                Text("·").foregroundStyle(SpendlyColor.muted.opacity(0.5))
+                .accessibilityIdentifier("dayButton")
+                Circle()
+                    .fill(SpendlyColor.muted)
+                    .frame(width: 3, height: 3)
+                    .accessibilityHidden(true)
                 Button { isEditingNote = true } label: {
-                    note.isEmpty ? Text("note") : Text(verbatim: note)
+                    (note.isEmpty ? Text("note") : Text(verbatim: note))
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(Rectangle())
                 }
+                .accessibilityIdentifier("noteButton")
                     .foregroundStyle(note.isEmpty ? SpendlyColor.muted : SpendlyColor.ink)
                     .lineLimit(1)
             }
@@ -226,17 +243,26 @@ struct QuickAddView: View {
     /// One habit-based suggestion while nothing is typed; a one-line hint on first launch.
     @ViewBuilder
     private var suggestion: some View {
-        if input.isBlank && toast == nil {
+        if input.isBlank {
             if let entry = store.frequentEntries(kind: kind, currencyCode: currencyCode, limit: 1).first {
-                Button("\(entry.category.emoji) \(entry.category.displayName) \(entry.amount.formatted(locale: locale, compact: true)) again?") {
+                Button {
                     save(amount: entry.amount, category: entry.category)
+                } label: {
+                    HStack(spacing: 6) {
+                        Text(entry.category.emoji)
+                        Text("\(entry.category.displayName) \(entry.amount.formatted(locale: locale, compact: true)) again?")
+                    }
                 }
                 .buttonStyle(PillButtonStyle(.quiet))
+                // Takes the height it needs, so it wraps instead of truncating at large text sizes.
+                .fixedSize(horizontal: false, vertical: true)
                 .transition(.opacity)
+                .accessibilityIdentifier("suggestion")
             } else {
                 Text("type an amount, then tap a category")
                     .font(SpendlyFont.caption)
                     .foregroundStyle(SpendlyColor.muted)
+                    .accessibilityIdentifier("firstLaunchHint")
             }
         }
     }
@@ -259,6 +285,7 @@ struct QuickAddView: View {
                     ) {
                         save(amount: Money(minorUnits: input.minorUnits, currencyCode: currencyCode), category: category)
                     }
+                    .accessibilityIdentifier("chip-\(category.name)")
                 }
             }
         }
