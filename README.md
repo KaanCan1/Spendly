@@ -15,7 +15,7 @@ A minimal expense tracker for iPhone. Type the amount, tap a category, and it is
   <img src="docs/screenshots/01-quick-add.png" width="200" alt="Quick add">
   <img src="docs/screenshots/03-just-saved.png" width="200" alt="Saved with undo">
   <img src="docs/screenshots/06-overview.png" width="200" alt="Monthly overview">
-  <img src="docs/screenshots/10-widget.jpg" width="200" alt="Home screen widget">
+  <img src="docs/screenshots/12-widget.jpg" width="200" alt="Home screen widget">
 </p>
 
 ## About
@@ -47,9 +47,9 @@ Most budgeting apps try to do everything. Spendly focuses on one thing: logging 
 |:---:|:---:|:---:|:---:|
 | <img src="docs/screenshots/05-day-picker.png" width="180"> | <img src="docs/screenshots/06-overview.png" width="180"> | <img src="docs/screenshots/07-budget.png" width="180"> | <img src="docs/screenshots/08-edit.png" width="180"> |
 
-| Settings | Widget |
-|:---:|:---:|
-| <img src="docs/screenshots/09-settings.png" width="180"> | <img src="docs/screenshots/10-widget.jpg" width="180"> |
+| Settings | Categories | Edit category | Widget |
+|:---:|:---:|:---:|:---:|
+| <img src="docs/screenshots/09-settings.png" width="180"> | <img src="docs/screenshots/10-categories.png" width="180"> | <img src="docs/screenshots/11-category-editor.png" width="180"> | <img src="docs/screenshots/12-widget.jpg" width="180"> |
 
 ## Tech Stack
 
