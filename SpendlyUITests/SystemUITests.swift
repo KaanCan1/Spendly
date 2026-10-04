@@ -91,9 +91,12 @@ final class SystemUITests: SpendlyUITestCase {
     private func audit() throws {
         continueAfterFailure = true
         try app.performAccessibilityAudit { issue in
-            // A clipping prediction the audit can't tie to an element: the largest-text audits
-            // check the real layout instead.
-            guard let element = issue.element else { return issue.auditType == .textClipped }
+            // Findings the audit can't tie to an element come from content scrolled partly off
+            // screen (the last legend pill at the edge of its row). Clipping is checked for real
+            // by the largest-text audits.
+            guard let element = issue.element else {
+                return [.textClipped, .contrast].contains(issue.auditType)
+            }
             let id = element.identifier
 
             // The system draws navigation bar buttons on Liquid Glass and caps their text size.

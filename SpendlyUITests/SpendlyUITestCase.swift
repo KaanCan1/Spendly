@@ -39,10 +39,16 @@ class SpendlyUITestCase: XCTestCase {
         }
     }
 
-    /// The topmost hittable keypad key with this identifier.
+    /// The topmost hittable keypad key with this identifier. Waits a little, since a sheet that
+    /// is still sliding away covers the keypad for a moment (longer on a slow CI machine).
     func key(_ id: String) -> XCUIElement {
         let matches = app.buttons.matching(identifier: id)
-        return matches.allElementsBoundByIndex.last(where: \.isHittable) ?? matches.firstMatch
+        let deadline = Date.now.addingTimeInterval(5)
+        repeat {
+            if let key = matches.allElementsBoundByIndex.last(where: \.isHittable) { return key }
+            RunLoop.current.run(until: .now.addingTimeInterval(0.2))
+        } while Date.now < deadline
+        return matches.firstMatch
     }
 
     /// Two taps: type the amount, tap the category. `category` is the stored English name.
@@ -83,7 +89,7 @@ class SpendlyUITestCase: XCTestCase {
         if total.waitForExistence(timeout: 2) {
             total.press(forDuration: 0.05, thenDragTo: app.buttons["key-1"].exists ? app.buttons["key-1"] : app.windows.firstMatch)
         }
-        for _ in 0..<2 where total.exists {
+        for _ in 0..<3 where !total.waitForNonExistence(timeout: 2) {
             app.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.15))
                 .press(forDuration: 0.05, thenDragTo: app.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.95)))
         }

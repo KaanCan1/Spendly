@@ -25,7 +25,13 @@ final class ProStoreTests: XCTestCase {
 
     private func loadedStore() async throws -> ProStore {
         let pro = ProStore()
-        await pro.loadProducts()
+        // A freshly booted simulator (as on CI) can answer the first request before the test
+        // session is ready.
+        for _ in 0..<10 {
+            await pro.loadProducts()
+            if pro.loadState == .loaded { break }
+            try await Task.sleep(for: .seconds(1))
+        }
         XCTAssertEqual(pro.loadState, .loaded)
         return pro
     }
