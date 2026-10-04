@@ -32,6 +32,10 @@ final class ProStoreTests: XCTestCase {
             if pro.loadState == .loaded { break }
             try await Task.sleep(for: .seconds(1))
         }
+        // GitHub's macOS runners can't serve StoreKit testing products; say so instead of failing.
+        if pro.loadState != .loaded, ProcessInfo.processInfo.environment["CI"] == "true" {
+            throw XCTSkip("StoreKit testing products are not available on this CI machine")
+        }
         XCTAssertEqual(pro.loadState, .loaded)
         return pro
     }

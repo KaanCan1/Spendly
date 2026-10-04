@@ -40,6 +40,9 @@ jobs:
           echo "SIMULATOR_ID=$id" >> "$GITHUB_ENV"
           xcrun simctl boot "$id"
       - name: Test
+        env:
+          # Passed into the test process as CI=true.
+          TEST_RUNNER_CI: "true"
         run: |
           xcodebuild test \
             -project Spendly.xcodeproj \

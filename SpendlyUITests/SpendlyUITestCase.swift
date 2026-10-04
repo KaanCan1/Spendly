@@ -89,10 +89,16 @@ class SpendlyUITestCase: XCTestCase {
         if total.waitForExistence(timeout: 2) {
             total.press(forDuration: 0.05, thenDragTo: app.buttons["key-1"].exists ? app.buttons["key-1"] : app.windows.firstMatch)
         }
-        for _ in 0..<3 where !total.waitForNonExistence(timeout: 2) {
-            app.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.15))
-                .press(forDuration: 0.05, thenDragTo: app.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.95)))
+        // A slow drag can read as a scroll of the list (it does on CI), so follow up with fast
+        // swipes on the header until the sheet is really gone.
+        for _ in 0..<4 where !total.waitForNonExistence(timeout: 2) {
+            if app.buttons["settingsButton"].exists {
+                app.buttons["settingsButton"].swipeDown(velocity: .fast)
+            } else {
+                total.swipeDown(velocity: .fast)
+            }
         }
+        XCTAssertTrue(total.waitForNonExistence(timeout: 3), "the overview did not close")
         XCTAssertTrue(app.buttons["key-1"].waitForExistence(timeout: 3), "could not get back to the keypad")
     }
 
