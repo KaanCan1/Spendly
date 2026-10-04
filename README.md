@@ -10,6 +10,7 @@ A minimal expense tracker for iPhone. Type the amount, tap a category, and it is
 ![SwiftUI](https://img.shields.io/badge/SwiftUI-0D96F6?logo=swift&logoColor=white)
 ![SwiftData](https://img.shields.io/badge/SwiftData-1C1C1E?logo=apple&logoColor=white)
 ![iOS 18+](https://img.shields.io/badge/iOS-18%2B-000000?logo=apple&logoColor=white)
+[![Tests](https://github.com/KaanCan1/Spendly/actions/workflows/tests.yml/badge.svg)](https://github.com/KaanCan1/Spendly/actions/workflows/tests.yml)
 
 <p align="center">
   <img src="docs/screenshots/01-quick-add.png" width="200" alt="Quick add">
@@ -65,7 +66,8 @@ Most budgeting apps try to do everything. Spendly focuses on one thing: logging 
 | Purchases | StoreKit 2 |
 | Localization | String Catalogs (English, Turkish) |
 | Modules | Swift Package Manager |
-| Tests | Swift Testing |
+| Tests | Swift Testing, XCTest UI tests, StoreKit Test |
+| CI | GitHub Actions |
 
 ## Architecture
 
@@ -133,10 +135,20 @@ In-app purchases can be tried locally with the `Spendly.storekit` configuration,
 Run the tests:
 
 ```bash
-cd Packages/SpendlyKit && swift test
+swift test --package-path Packages/SpendlyKit
 ```
 
+```bash
+xcodebuild test -project Spendly.xcodeproj -scheme Spendly -destination 'platform=iOS Simulator,name=iPhone 18 Pro'
+```
+
+The first command tests the shared logic. The second runs the StoreKit tests and the UI tests: quick add, the overview, budgets, categories, settings, the paywall, Turkish, budget alert notifications and Apple's accessibility audit at the default and the largest text size. GitHub Actions runs both on every pull request.
+
 The earlier Flutter and Node.js version is on the [`archive/flutter`](https://github.com/KaanCan1/Spendly/tree/archive/flutter) branch.
+
+## Privacy
+
+Spendly has no account, no analytics and no server. Entries stay on the device and, with iCloud turned on, in the user's own private iCloud database. The app and the widgets declare their API use in a privacy manifest (`PrivacyInfo.xcprivacy`) and collect no data.
 
 ## Author
 

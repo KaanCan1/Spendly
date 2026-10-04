@@ -1,0 +1,54 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    name: SpendlyKit
+    runs-on: macos-26
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - name: Swift package tests
+        run: swift test --package-path Packages/SpendlyKit
+
+  app:
+    name: App, StoreKit and UI tests
+    runs-on: macos-26
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - name: Pick an iPhone simulator
+        run: |
+          id=$(xcrun simctl list devices available -j \
+            | jq -r '[.devices | to_entries | sort_by(.key)[] | select(.key | contains("iOS")) | .value[] | select(.name | startswith("iPhone"))] | last | .udid')
+          echo "Using simulator $id"
+          echo "SIMULATOR_ID=$id" >> "$GITHUB_ENV"
+          xcrun simctl boot "$id"
+      - name: Test
+        run: |
+          xcodebuild test \
+            -project Spendly.xcodeproj \
+            -scheme Spendly \
+            -destination "id=$SIMULATOR_ID" \
+            -resultBundlePath build/Tests.xcresult
+      - name: Upload results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Tests.xcresult
+          path: build/Tests.xcresult
