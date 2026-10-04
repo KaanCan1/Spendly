@@ -87,7 +87,10 @@ class SpendlyUITestCase: XCTestCase {
         if app.buttons["settingsDone"].waitForExistence(timeout: 1) { app.buttons["settingsDone"].tap() }
         let total = app.staticTexts["monthTotal"]
         if total.waitForExistence(timeout: 2) {
-            total.press(forDuration: 0.05, thenDragTo: app.buttons["key-1"].exists ? app.buttons["key-1"] : app.windows.firstMatch)
+            // To a point near the bottom, not to a keypad key: the key sits under the sheet, and
+            // iOS 26 refuses a drag that ends on an element it can't hit.
+            let bottom = app.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.95))
+            total.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).press(forDuration: 0.05, thenDragTo: bottom)
         }
         // A slow drag can read as a scroll of the list (it does on CI), so follow up with fast
         // swipes on the header until the sheet is really gone.
