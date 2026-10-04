@@ -39,10 +39,16 @@ class SpendlyUITestCase: XCTestCase {
         }
     }
 
-    /// The topmost hittable keypad key with this identifier.
+    /// The topmost hittable keypad key with this identifier. Waits a little, since a sheet that
+    /// is still sliding away covers the keypad for a moment (longer on a slow CI machine).
     func key(_ id: String) -> XCUIElement {
         let matches = app.buttons.matching(identifier: id)
-        return matches.allElementsBoundByIndex.last(where: \.isHittable) ?? matches.firstMatch
+        let deadline = Date.now.addingTimeInterval(5)
+        repeat {
+            if let key = matches.allElementsBoundByIndex.last(where: \.isHittable) { return key }
+            RunLoop.current.run(until: .now.addingTimeInterval(0.2))
+        } while Date.now < deadline
+        return matches.firstMatch
     }
 
     /// Two taps: type the amount, tap the category. `category` is the stored English name.
@@ -81,12 +87,21 @@ class SpendlyUITestCase: XCTestCase {
         if app.buttons["settingsDone"].waitForExistence(timeout: 1) { app.buttons["settingsDone"].tap() }
         let total = app.staticTexts["monthTotal"]
         if total.waitForExistence(timeout: 2) {
-            total.press(forDuration: 0.05, thenDragTo: app.buttons["key-1"].exists ? app.buttons["key-1"] : app.windows.firstMatch)
+            // To a point near the bottom, not to a keypad key: the key sits under the sheet, and
+            // iOS 26 refuses a drag that ends on an element it can't hit.
+            let bottom = app.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.95))
+            total.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).press(forDuration: 0.05, thenDragTo: bottom)
         }
-        for _ in 0..<2 where total.exists {
-            app.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.15))
-                .press(forDuration: 0.05, thenDragTo: app.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.95)))
+        // A slow drag can read as a scroll of the list (it does on CI), so follow up with fast
+        // swipes on the header until the sheet is really gone.
+        for _ in 0..<4 where !total.waitForNonExistence(timeout: 2) {
+            if app.buttons["settingsButton"].exists {
+                app.buttons["settingsButton"].swipeDown(velocity: .fast)
+            } else {
+                total.swipeDown(velocity: .fast)
+            }
         }
+        XCTAssertTrue(total.waitForNonExistence(timeout: 3), "the overview did not close")
         XCTAssertTrue(app.buttons["key-1"].waitForExistence(timeout: 3), "could not get back to the keypad")
     }
 

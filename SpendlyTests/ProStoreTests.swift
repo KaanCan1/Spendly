@@ -25,7 +25,17 @@ final class ProStoreTests: XCTestCase {
 
     private func loadedStore() async throws -> ProStore {
         let pro = ProStore()
-        await pro.loadProducts()
+        // A freshly booted simulator (as on CI) can answer the first request before the test
+        // session is ready.
+        for _ in 0..<10 {
+            await pro.loadProducts()
+            if pro.loadState == .loaded { break }
+            try await Task.sleep(for: .seconds(1))
+        }
+        // GitHub's macOS runners can't serve StoreKit testing products; say so instead of failing.
+        if pro.loadState != .loaded, ProcessInfo.processInfo.environment["CI"] == "true" {
+            throw XCTSkip("StoreKit testing products are not available on this CI machine")
+        }
         XCTAssertEqual(pro.loadState, .loaded)
         return pro
     }
